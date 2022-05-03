@@ -27,8 +27,8 @@
     <label for="password">Contraseña</label>
     <input type="password" name="password" id="password" value="{{ old('password') }}"><br><br>
 
-    <label for="email_verified_at">Verificar Contraseña</label>
-    <input type="password" name="email_verified_at" id="email_verified_at" value="{{ old('email_verified_at') }}"><br><br>
+    <label for="password_confirmation">Verificar Contraseña</label>
+    <input type="password" name="password_confirmation" id="password_confirmation" value="{{ old('password_confirmation') }}"><br><br>
 
     <label for="birthday_date">Fecha de Nacimiento</label>
     <input type="date" name="birthday_date" id="birthday_date" value="{{ old('birthday_date') }}"><br><br>
@@ -36,9 +36,11 @@
     <label for="cell_personal">Número Celular</label>
     <input type="number" name="cell_personal" id="cell_personal" value="{{ old('cell_personal') }}"><br><br>
 
-    <label for="cell_personal">Ciudad Natal</label>
-    <select name="" id="">
-        <option value="">Santa Cruz</option>
+    <label for="name_regional">Ciudad Natal</label>
+    <select name="name_regional" id="name_regional">
+        @foreach ($regionals as $regional)
+            <option value="{{ $regional->id }}">{{ $regional->name_regional }}</option>
+        @endforeach
     </select><br><br>
 
     <button type="submit">Save</button>

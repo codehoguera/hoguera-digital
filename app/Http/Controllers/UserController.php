@@ -3,44 +3,59 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Models\Regional;
 use App\Models\User;
 use App\Models\UserDate;
+use Illuminate\Auth\Middleware\Authorize;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    public function index() 
+    public function index(User $user) 
     {
+        //$this->authorize('configs', $user->id);
+       // $users = Role::all()->pluck('name');
+        return User::with('roles')->first();
         
-        $users = UserDate::all();
-        
-        return view('/home', compact('users'));
-
-        //return User::find(1)->userDate;//->regional;//->name_regional;
-
-        // return Regional::find(2)->userDate;
-
     }
 
     public function create() 
     {
-        return view('users.create');
+        $regionals = Regional::all();
+        return view('users.create',  compact('regionals'));
     }
 
-    public function store(StoreUserRequest $request) 
+    public function store(Request $request) 
     {
-        User::create([
+
+        $user = User::create([
             'email' => $request->email,
             'password' => $request->password,
-            'email_verified_at' => $request->email_verified_at,
+            'enable' => 1,
+        ]);
+
+        $regional = Regional::create([
+            ''
         ]);
         
-        UserDate::create([
+        $user->userDate()->create([
             'name' => $request->name,
-            'first_lastname' => $request->first_lastname,
+            'email_personal', $request->email_personal,
+            'first_lastname' => $request->first_lastname, 
             'second_lastname' => $request->second_lastname,
-            'email_personal' => $request->email_personal,
-            'cell_personal' => $request->cell_personal,
+            'birthday_date' => $request->birthday_date,
+            'cell_personal' => $request->cell_personal, 
         ]);
+        
+        // UserDate::create([
+        //     'name' => $request->name,
+        //     'first_lastname' => $request->first_lastname,
+        //     'second_lastname' => $request->second_lastname,
+        //     'email_personal' => $request->email_personal,
+        //     'cell_personal' => $request->cell_personal,
+        // ]);
 
     }
 

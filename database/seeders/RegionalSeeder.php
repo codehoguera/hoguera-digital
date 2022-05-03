@@ -40,7 +40,7 @@ class RegionalSeeder extends Seeder
             'code_suc' => 'SUC06',
         ]);
         Regional::create([
-            'name_regional' => 'SUC02',
+            'name_regional' => 'ORURO',
             'code_suc' => 'SUC08',
         ]);
         Regional::create([
