@@ -5,16 +5,15 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
 <style>
-
-.form-search-index {
-    width: 300px;
+        
+    .form-search-index {
+        width: 300px;
 }
 
 </style>
 @endsection
 @section('content')
     <div class="row">
-
         <div class="col-sm-12">
             <div class="card-body">
                 @if (session('notification'))
@@ -24,25 +23,34 @@
                     </div>
                 @endif
             </div>
-            <div class="d-grid gap-2 col-6 mx-auto">
-                <a href="{{ route('users.create-user-by-roles') }}" class="btn btn-primary mb-2" type="button" >Crear Usuarios</a>
-            </div>
+            <form action="{{ route('users.directores.director') }}" class="d-flex mb-2 form-search-index"  method="POST">
+                @csrf
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            <form action="{{ route('users.directores.directorbysearch') }}" class="d-flex mb-2 form-search-index"  method="POST">
+                @csrf
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
             <div class="card card-body">
                 <table class="table table-striped" style="width:100%" id="users">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Rol</th>
+                            <th>Nombre</th>
+                            <th>Usuario</th>
+                            <th>Colegio</th>
+                            <th>Asesor</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($users as $user)
+                        @foreach ($directores as $user)
                             <tr>
-                                <td>{{ $user->userDate->name.' '.$user->userDate->first_lastname.' '.$user->userDate->second_lastname }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->roles[0]->name }}</td>
+                                <td>{{ $user->name.' '.$user->first_lastname.' '.$user->second_lastname }}</td>
+                                <td>{{ $user->user->email }}</td>
+                                <td>{{ $user->entities[0]->name_entity }}</td>
+                                <th></th>
                                 <td>
                                     <a class="btn btn-info" href="{{ url('/user/'.$user->id.'/edit') }}">Edit</a>
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-delete-{{ $user->id }}">

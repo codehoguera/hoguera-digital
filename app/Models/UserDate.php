@@ -35,8 +35,10 @@ class UserDate extends Model
         'code_employee_sap',
         'code_teacher',
         'change_password',
-        'creator_user',
-        'rate',
+        'rate_hoguera',
+        'rate_alpema',
+        'verify_data',
+        'pos_hoguera_id',
         'field1',
         'field2',
         'field3',
@@ -49,11 +51,17 @@ class UserDate extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function regional()
     {
         return $this->belongsTo(Regional::class);
     }
+
+    public function entities()
+    {
+        return $this->belongsToMany(Entity::class);
+    }
+
 }

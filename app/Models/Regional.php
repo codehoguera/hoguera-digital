@@ -10,12 +10,17 @@ class Regional extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name_regional',
+        'name',
         'code_suc',
     ];
     
     public function userDate()
     {
         return $this->hasMany(UserDate::class);
+    }
+
+    public function entities()
+    {
+        return $this->hasMany(Entity::class);
     }
 }

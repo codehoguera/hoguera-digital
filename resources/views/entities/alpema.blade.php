@@ -24,32 +24,35 @@
                     </div>
                 @endif
             </div>
-            <div class="d-grid gap-2 col-6 mx-auto">
-                <a href="{{ route('users.create-user-by-roles') }}" class="btn btn-primary mb-2" type="button" >Crear Usuarios</a>
-            </div>
+            <form class="d-flex mb-2 form-search-index">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
             <div class="card card-body">
                 <table class="table table-striped" style="width:100%" id="users">
                     <thead>
                         <tr>
+                            <th>Code Sap</th>
                             <th>Name</th>
-                            <th>Email</th>
-                            <th>Rol</th>
+                            <th>Regional</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($users as $user)
-                            <tr>
-                                <td>{{ $user->userDate->name.' '.$user->userDate->first_lastname.' '.$user->userDate->second_lastname }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->roles[0]->name }}</td>
-                                <td>
-                                    <a class="btn btn-info" href="{{ url('/user/'.$user->id.'/edit') }}">Edit</a>
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-delete-{{ $user->id }}">
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
+                            @foreach ($user['entity'] as $item)
+                                <tr>
+                                    <td>{{ $item->code_sie_entity }}</td>
+                                    <td>{{ $item->name_entity }}</td>
+                                    <td>{{ $item->name_entity }}</td>
+                                    <td>
+                                        <a class="btn btn-info" href="{{ url('/user/'.$user->id.'/edit') }}">Edit</a>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-delete-{{ $user->id }}">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
                         @endforeach
                     </tbody>
                 </table>

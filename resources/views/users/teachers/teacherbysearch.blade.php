@@ -5,16 +5,16 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
 <style>
+        
+    .form-search-index {
+        width: 300px;
 
-.form-search-index {
-    width: 300px;
-}
+    }
 
 </style>
 @endsection
 @section('content')
     <div class="row">
-
         <div class="col-sm-12">
             <div class="card-body">
                 @if (session('notification'))
@@ -24,25 +24,26 @@
                     </div>
                 @endif
             </div>
-            <div class="d-grid gap-2 col-6 mx-auto">
-                <a href="{{ route('users.create-user-by-roles') }}" class="btn btn-primary mb-2" type="button" >Crear Usuarios</a>
-            </div>
             <div class="card card-body">
                 <table class="table table-striped" style="width:100%" id="users">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Rol</th>
+                            <th>SIE</th>
+                            <th>Nombre</th>
+                            <th>Dependence</th>
+                            <th>Regional</th>
+                            <th>APD</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($users as $user)
+                        @foreach ($teachers as $user)
                             <tr>
-                                <td>{{ $user->userDate->name.' '.$user->userDate->first_lastname.' '.$user->userDate->second_lastname }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->roles[0]->name }}</td>
+                                <td>{{ $user->entities[0]->code_sie_entity }}</td>
+                                <td>{{ $user->entities[0]->name_entity }}</td>
+                                <td>{{ $user->entities[0]->dependence }}</td>
+                                <td>{{ $user->regional->name }}</td>
+                                <td></td>
                                 <td>
                                     <a class="btn btn-info" href="{{ url('/user/'.$user->id.'/edit') }}">Edit</a>
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-delete-{{ $user->id }}">

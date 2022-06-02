@@ -24,11 +24,11 @@ return new class extends Migration
             $table->unsignedBigInteger('regional_id');
             $table->foreign('regional_id')->references('id')->on('regionals');
 
-            $table->string('name', 120);
+            $table->string('name');
             $table->string('first_lastname', 100);
             $table->string('second_lastname', 100);
             $table->integer('nro_ci')->nullable();
-            $table->integer('issued')->nullable();
+            $table->string('issued', 20)->nullable();
             $table->bigInteger('nit')->nullable();
             $table->date('birthday_date')->nullable();
             $table->string('city', 30)->nullable();
@@ -36,21 +36,24 @@ return new class extends Migration
             $table->integer('landline')->nullable();
             $table->integer('cell_personal');
             $table->integer('cell_work')->nullable();
-            $table->string('email_personal', 120)->unique();
+            $table->string('email_personal')->nullable();
             $table->string('code_sap', 20)->nullable();
             $table->string('code_employee_sap', 20)->nullable();
             $table->string('code_teacher', 30)->nullable();
-            $table->tinyInteger('change_password');
-            $table->integer('creator_user')->nullable();
-            $table->double('rate')->nullable();
-            $table->string('field1', 120)->nullable();
-            $table->string('field2', 120)->nullable();
-            $table->string('field3', 120)->nullable();
-            $table->string('field4', 120)->nullable();
-            $table->string('field5', 120)->nullable();
+            $table->boolean('change_password')->nullable();
+            $table->double('rate_hoguera')->nullable();
+            $table->double('rate_alpema')->nullable();
+            $table->boolean('verify_data')->nullable();
+            $table->unsignedBigInteger('pos_hoguera_id')->nullable();
+            $table->string('field1')->nullable();
+            $table->string('field2')->nullable();
+            $table->string('field3')->nullable();
+            $table->string('field4')->nullable();
+            $table->string('field5')->nullable();
             $table->string('field6', 500)->nullable();
             $table->string('field7', 500)->nullable();
             $table->string('field8', 500)->nullable();
+
             $table->timestamps();
             $table->softDeletes();
         });

@@ -15,10 +15,12 @@ return new class extends Migration
     {
         Schema::create('regionals', function (Blueprint $table) {
             $table->id();
-            $table->string('name_regional', 60);
+
+            $table->string('name', 60);
             $table->string('code_suc',120);
-            $table->softDeletes();
+            
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

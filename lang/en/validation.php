@@ -157,6 +157,13 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'email' => 'e-mail',
+        'name' => 'nombre',
+        'first_lastname' => 'apellido paterno',
+        'second_lastname' => 'apellido materno',
+        'cell_personal' => 'celular personal',
+        'cell_work' => 'celular trabajo'
+    ],
 
 ];

@@ -13,12 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('subjets', function (Blueprint $table) {
-            $table->id();
-            $table->string('name_subject', 30);
-            $table->string('cover', 200);
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::create('entity_user_date', function (Blueprint $table) {
+
+            //fk user_dates
+            $table->unsignedBigInteger('user_date_id');
+            $table->foreign('user_date_id')->references('id')->on('user_dates');
+
+            //fk entities
+            $table->unsignedBigInteger('entity_id');
+            $table->foreign('entity_id')->references('id')->on('entities');
+
         });
     }
 
@@ -29,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subjets');
+        //
     }
 };

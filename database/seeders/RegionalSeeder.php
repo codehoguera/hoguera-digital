@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Regional;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class RegionalSeeder extends Seeder
@@ -16,37 +15,43 @@ class RegionalSeeder extends Seeder
     public function run()
     {
         Regional::create([
-            'name_regional' => 'BENI',
+            'name' => 'BENI',
             'code_suc' => 'SUC08',
-        ]);
-        Regional::create([
-            'name_regional' => 'SANTA CRUZ',
-            'code_suc' => 'SUC04',
-        ]);
-        Regional::create([
-            'name_regional' => 'COCHABAMBA',
-            'code_suc' => 'SUC13',
-        ]);
-        Regional::create([
-            'name_regional' => 'CHUQUISACA',
-            'code_suc' => 'SUC15',
-        ]);
-        Regional::create([
-            'name_regional' => 'TARIJA',
-            'code_suc' => 'SUC05',
-        ]);
-        Regional::create([
-            'name_regional' => 'LA PAZ',
-            'code_suc' => 'SUC06',
-        ]);
-        Regional::create([
-            'name_regional' => 'ORURO',
-            'code_suc' => 'SUC08',
-        ]);
-        Regional::create([
-            'name_regional' => 'POTOSI',
-            'code_suc' => 'SUC10',
         ]);
 
+        Regional::create([
+            'name' => 'SANTA CRUZ',
+            'code_suc' => 'SUC04',
+        ]);
+
+        Regional::create([
+            'name' => 'COCHABAMBA',
+            'code_suc' => 'SUC13',
+        ]);
+
+        Regional::create([
+            'name' => 'CHUQUISACA',
+            'code_suc' => 'SUC15',
+        ]);
+
+        Regional::create([
+            'name' => 'TARIJA',
+            'code_suc' => 'SUC05',
+        ]);
+
+        Regional::create([
+            'name' => 'LA PAZ',
+            'code_suc' => 'SUC06',
+        ]);
+
+        Regional::create([
+            'name' => 'ORURO',
+            'code_suc' => 'SUC02',
+        ]);
+
+        Regional::create([
+            'name' => 'POTOSI',
+            'code_suc' => 'SUC10',
+        ]);
     }
 }

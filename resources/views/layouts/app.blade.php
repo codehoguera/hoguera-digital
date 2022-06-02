@@ -9,29 +9,71 @@
     @yield('css')
 </head>
 <body>
+  
+@if (!auth()->user() || auth()->user()->enable == true)
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url('/') }}">Home</a>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        @auth
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                System
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="{{ route('users.index') }}">Users</a></li>
+                  <li><a class="dropdown-item" href="{{ route('users.directores.director') }}">Director</a></li>
+                  <li><a class="dropdown-item" href="{{ route('users.teachers.teacher') }}">Teacher</a></li>
+                  <li><a class="dropdown-item" href="{{ route('users.students.student') }}">Student</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Entity
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="{{ route('entities.index') }}">Hoguera</a></li>
+                  <li><a class="dropdown-item" href="{{ route('entities.alpema') }}">Alpema</a></li>
+              </ul>
+            </li>
+          </ul>
+          <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <ul class="navbar-nav float-right">
+              <li class="nav-item">
+                      <button class="btn btn-light">Logout</button>
+              </li>
+            </ul>
+          </form>
+          <ul class="navbar-nav float-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Languaje
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="/language/es">Spanish</a></li>
+                  <li><a class="dropdown-item" href="/language/en">English</a></li>
+              </ul>
+            </li>
+          </ul>
+          <p class="navbar-nav float-right" href="#">{{ auth()->user()->userDate->name }}</p>
+        @else
+        <a class="navbar-brand" href="{{ route('login') }}">Login</a>
+        @endauth
+      </div>
+    </div>
+  </nav> 
+@else
 
-    @if (Route::has('login'))
-        <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
-            @auth
-                <a href="{{ url('/home') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Home</a>
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button>logout</button>
-                </form>
-            @else
-                <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Log in</a>
+@endif 
 
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">Register</a>
-                @endif
-            @endauth
-        </div>
-    @endif
 
-    @yield('content')
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+@yield('content')
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     @yield('js')
 </body>
+
 </html>

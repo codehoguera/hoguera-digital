@@ -16,9 +16,7 @@ class UserDateController extends Controller
      */
     public function index()
     {
-        $regionals = Regional::all();
-        
-        dd($regionals->toArray());
+ 
     }
 
     /**

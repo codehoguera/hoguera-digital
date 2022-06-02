@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUserRequest extends FormRequest
@@ -22,38 +23,52 @@ class StoreUserRequest extends FormRequest
      * @return array
      */
     public function rules()
-    {
-        return [
-            'name' => 'required|max:120',
-            'enable' => 'nullable',
-            'password' => 'nullable',
-            'email_verified_at' => 'nullable',
-            'first_lastname' => 'required|max:100',
-            'second_lastname' => 'required|max:100',
-            'nro_ci' => 'nullable',
-            'issued' => 'nullable|max:20',
-            'nit' => 'nullable',
-            'birthday_date' => 'nullable',
-            'city' => 'nullable',
-            'addres' => 'nullable',
-            'landline' => 'nullable',
-            'cell_personal' => 'required',
-            'cell_work' => 'nullable',
-            'email_personal' => 'required|email|max:120',
-            'code_sap' => 'nullable|max:20',
-            'code_employee_sap' => 'nullable|max:20',
-            'code_teacher' => 'nullable|max:30',
-            'change_password' => 'nullable|max:120',
-            'creator_user' => 'nullable',
-            'rate' => 'nullable|max:120',
-            'field1' => 'nullable|max:120',
-            'field2' => 'nullable|max:120',
-            'field3' => 'nullable|max:120',
-            'field4' => 'nullable|max:120',
-            'field5' => 'nullable|max:120',
-            'field6' => 'nullable|max:120',
-            'field7' => 'nullable|max:120',
-            'field8' => 'nullable|max:120',
+    {   
+        $userId = User::find(Auth()->id());
+        $roleName = $userId->getRoleNames()[0];
+
+        $rules = [
+            'email' => 'required|email|max:120|unique:users',
+            'enable' => 'boolean',
+            'name' => 'required|string|max:120',
+            'first_lastname'  => 'required|string|max:100',
+            'second_lastname'  => 'required|string|max:100',
+            'nro_ci' => 'nullable|numeric',
+            'issued' => 'nullable|string|max:20',
+            'nit' => 'nullable|numeric',
+            'birthday_date' => 'nullable|date',
+            'city' => 'nullable|string|max:30',
+            'addres' => 'nullable|string|max:500',
+            'landline' => 'nullable|numeric',
+            'cell_personal' => 'required|numeric',
+            'cell_work' => 'nullable|numeric|nullable',
+            'email_personal' => 'nullable|email|max:120',
+            'code_sap' => 'nullable|string|max:20',
+            'code_employee_sap' => 'nullable|string|max:20',
+            'code_teacher' => 'nullable|string|max:30',
+            'change_password' => 'nullable|boolean',
+            'rate_hoguera' => 'nullable',
+            'rate_alpema' => 'nullable',
+            'verify_data' => 'nullable|boolean',
+            'pos_hoguera_id' => 'nullable|numeric',
+            'field1' => 'nullable|string',
+            'field2' => 'nullable|string',
+            'field3' => 'nullable|string',
+            'field4' => 'nullable|string',
+            'field5' => 'nullable|string',
+            'field6' => 'nullable|string',
+            'field7' => 'nullable|string',
+            'field8' => 'nullable|string',
         ];
+        
+        if($roleName == 'admin' && ! $this->get('regional_id'))
+            $rules = array_merge($rules, ['regional_id' => 'required|exists:regionals,id']);
+
+        if($this->get('password'))
+            $rules = array_merge($rules, ['password' => 'required|confirmed|max:120']);
+
+        return $rules;
     }
+
+    
 }

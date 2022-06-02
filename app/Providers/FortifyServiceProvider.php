@@ -35,10 +35,12 @@ class FortifyServiceProvider extends ServiceProvider
     public function boot()
     {
         Fortify::loginView('auth.login');
+        
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
+        
         Fortify::authenticateUsing(function(Request $request) {
             $request->validate([
                 'email' => 'required|email',
@@ -46,24 +48,21 @@ class FortifyServiceProvider extends ServiceProvider
             ]);
 
             $user = User::where('email', $request->email)->first();
+
             if(!$user == $request->email){
                 throw ValidationException::withMessages([
                     'email' => ['Este usuario no existe!!']
                 ]);
             }elseif(!Hash::check($request->password, $user->password)){
                 throw ValidationException::withMessages([
-                    'password' => ['La contraseña es incorrecta']
+                    'password' => ['La contraseña es incorrecta!!']
                 ]);
-            }elseif(!$user->enable == 1){
-                throw ValidationException::withMessages([
-                    'enable' => 'Este usuario esta deshabilitado'
-                ]);
+            }elseif(!$user->enable == true){
+                return $user;
             }
 
             return $user;
         });
-
-        
 
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->email;

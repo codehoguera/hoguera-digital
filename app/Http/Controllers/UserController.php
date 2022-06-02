@@ -6,124 +6,436 @@ use App\Http\Requests\StoreUserRequest;
 use App\Models\Regional;
 use App\Models\User;
 use App\Models\UserDate;
-use Illuminate\Auth\Middleware\Authorize;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use PhpParser\Node\Stmt\TryCatch;
 use Spatie\Permission\Models\Role;
+
+use function PHPUnit\Framework\returnSelf;
 
 class UserController extends Controller
 {
-    public function index(User $user) 
+
+    public function index()
     {
-        //$this->authorize('configs', $user->id);
-       // $users = Role::all()->pluck('name');
-        return User::with('roles')->first();
-        
+        $user = User::find(Auth()->id());
+        $role = $user->getRoleNames()[0];
+        $users = [];
+        switch($role){
+            case 'admin':
+                $users = User::with('roles')
+                        ->whereHas('roles', function ($query) {
+                            $query->whereNotIn('name', ['teacher', 'student', 'school-principal']);
+                        })
+                        ->select('id', 'email')
+                        ->get();
+                break;
+            case 'admregional':
+                $users = User::with('roles', 'userDate')
+                        ->whereHas('roles', function ($query) {
+                            $query->whereNotIn('name', ['teacher', 'student', 'school-principal']);
+                        })
+                        ->whereHas('userDate', function ($query) use ($user){
+                            $query->where('regional_id', $user->userDate->regional_id);
+                        })
+                        ->select('id', 'email')
+                        ->get();
+                break;
+            default:
+                $users = [];
+        }
+        return view('users.index', compact('users'));
     }
 
-    public function create() 
+    public function directorSearch()
     {
-        $regionals = Regional::all();
-        return view('users.create',  compact('regionals'));
+        $directores = [];
+
+        return view('users.directores.director', compact('directores'));
     }
 
-    public function store(Request $request) 
+    public function director(Request $request) 
     {
-
-        $user = User::create([
-            'email' => $request->email,
-            'password' => $request->password,
-            'enable' => 1,
+        $validated = $request->validate([
+            'query' => 'required|string',
         ]);
-
-        $regional = Regional::create([
-            ''
-        ]);
-        
-        $user->userDate()->create([
-            'name' => $request->name,
-            'email_personal', $request->email_personal,
-            'first_lastname' => $request->first_lastname, 
-            'second_lastname' => $request->second_lastname,
-            'birthday_date' => $request->birthday_date,
-            'cell_personal' => $request->cell_personal, 
-        ]);
-        
-        // UserDate::create([
-        //     'name' => $request->name,
-        //     'first_lastname' => $request->first_lastname,
-        //     'second_lastname' => $request->second_lastname,
-        //     'email_personal' => $request->email_personal,
-        //     'cell_personal' => $request->cell_personal,
-        // ]);
-
+        $search = $request->get('query'); 
+        $user = User::find(Auth()->id());
+        $role = $user->getRoleNames()[0];
+        $directores = [];
+        switch($role){
+            case 'admin':
+                $directores = UserDate::where('name', 'LIKE', "%$search%")
+                                ->whereHas('user', function ($query) {
+                                    $query->whereHas('roles', function ($query) {
+                                        $query->where('name', 'school-principal');
+                                    });
+                                })
+                                ->get();
+                break;
+            case 'admregional':
+                $directores = UserDate::where('name', 'LIKE', "%$search%")
+                                ->where('regional_id', $user->userDate->regional_id)
+                                ->whereHas('user', function ($query) {
+                                    $query->whereHas('roles', function ($query) {
+                                        $query->where('name', 'school-principal');
+                                    });
+                                })
+                                ->get(); 
+                break;
+            default:
+                $directores = [];
+        }
+    
+        return view('users.directores.director', compact('directores'));
     }
 
-    public function edit($id) 
+    public function directorbysearch(Request $request) 
+    {
+        $validated = $request->validate([
+            'query' => 'required|string',
+        ]);
+        $search = $request->get('query'); 
+        $user = User::find(Auth()->id());
+        $role = $user->getRoleNames()[0];
+        $directores = [];
+        switch($role){
+            case 'admin':
+                $directores = UserDate::whereHas('entities', function ($query) use ($search) {
+                                $query->where('name_entity', 'LIKE', "%$search%");
+                            })
+                            ->whereHas('user', function ($query) {
+                                $query->whereHas('roles', function ($query) {
+                                    $query->where('name', 'school-principa');
+                                });
+                            })
+                            ->get();
+                break;
+            case 'admregional':
+                $directores = UserDate::whereHas('entities', function ($query) use ($search) {
+                                $query->where('name_entity', 'LIKE', "%$search%");
+                            })
+                            ->whereHas('user', function ($query) {
+                                $query->whereHas('roles', function ($query) {
+                                    $query->where('name', 'school-principa');
+                                });
+                            })
+                            ->where('regional_id', $user->userDate->regional_id)
+                            ->get();
+                break;
+            default:
+                $directores = [];
+
+        }
+        return view('users.directores.directorbysearch', compact('directores'));
+    }
+
+    public function teacherSearch() 
+    {
+        $teachers = [];
+
+        return view('users.teachers.teacher', compact('teachers'));
+    }
+
+    public function teacher(Request $request) 
+    {
+        $validated = $request->validate([
+            'query' => 'required|string',
+        ]);
+        $search = $request->get('query'); 
+        $user = User::find(Auth()->id());
+        $role = $user->getRoleNames()[0];
+        $teachers = [];
+        switch($role){
+            case 'admin':
+                $teachers = UserDate::where('name', 'LIKE', "%$search%")
+                                ->whereHas('user', function($query){
+                                    $query->whereHas('roles', function ($query) {
+                                        $query->where('name', 'teacher');
+                                    });
+                                })
+                                ->get();
+                break;
+            case 'admregional':
+                $teachers = UserDate::where('name', 'LIKE', "%$search%")
+                                ->where('regional_id', $user->userDate->regional_id)
+                                ->whereHas('user', function($query){
+                                    $query->whereHas('roles', function ($query) {
+                                        $query->where('name', 'teacher');
+                                    });
+                                })
+                                ->get();
+                break;
+            default:
+                $teachers = [];
+
+        }
+        return view('users.teachers.teacher', compact('teachers'));
+    }
+
+    public function teacherbysearch(Request $request) 
+    {
+        $validated = $request->validate([
+            'query' => 'required|string',
+        ]);
+        $search = $request->get('query'); 
+        $user = User::find(Auth()->id());
+        $role = $user->getRoleNames()[0];
+        $teachers = [];
+        switch($role){
+            case 'admin':
+                $teachers = UserDate::whereHas('entities', function ($query) use ($search) {
+                                $query->where('name_entity', 'LIKE', "%$search%");
+                            })
+                            ->whereHas('user', function ($query) {
+                                $query->whereHas('roles', function ($query) {
+                                    $query->where('name', 'teacher');
+                                });
+                            })
+                            ->get();
+                break;
+            case 'admregional':
+                $teachers = UserDate::whereHas('entities', function ($query) use ($search) {
+                                $query->where('name_entity', 'LIKE', "%$search%");
+                            })
+                            ->whereHas('user', function ($query) {
+                                $query->whereHas('roles', function ($query) {
+                                    $query->where('name', 'teacher');
+                                });
+                            })
+                            ->where('regional_id', $user->userDate->regional_id)
+                            ->get();
+                break;
+            default:
+                $teachers = [];
+
+        }
+        return view('users.teachers.teacherbysearch', compact('teachers'));
+    }
+
+    public function studentSearch() 
+    {
+        $students = [];
+
+        return view('users.students.student', compact('students'));
+    }
+
+    public function student(Request $request) 
+    {
+        $validated = $request->validate([
+            'query' => 'required|string',
+        ]);
+        $search = $request->get('query'); 
+        $user = User::find(Auth()->id());
+        $role = $user->getRoleNames()[0];
+       $students = [];
+        switch($role){
+            case 'admin':
+                $students = UserDate::where('name', 'LIKE', "%$search%")
+                                ->whereHas('user', function ($query) {
+                                    $query->whereHas('roles', function ($query) {
+                                        $query->where('name', 'student');
+                                    });
+                                })
+                                ->get();
+                break;
+            case 'admregional':
+                $students = UserDate::where('name', 'LIKE', "%$search%")
+                                ->where('regional_id', $user->userDate->regional_id)
+                                ->whereHas('user', function ($query) {
+                                    $query->whereHas('roles', function ($query) {
+                                        $query->where('name', 'student');
+                                    });
+                                })
+                                ->get();
+                break;
+            default:
+               $students = [];
+
+        }
+        return view('users.students.student', compact('students'));
+    }
+
+    public function studentbysearch(Request $request) 
+    {
+        $validated = $request->validate([
+            'query' => 'required|string',
+        ]);
+        $search = $request->get('query'); 
+        $user = User::find(Auth()->id());
+        $role = $user->getRoleNames()[0];
+        $students = [];
+        switch($role){
+            case 'admin':
+                $students = UserDate::whereHas('entities', function ($query) use ($search) {
+                                $query->where('name_entity', 'LIKE', "%$search%");
+                            })
+                            ->whereHas('user', function ($query) {
+                                $query->whereHas('roles', function ($query) {
+                                    $query->where('name', 'student');
+                                });
+                            })
+                            ->get();
+                break;
+            case 'admregional':
+                $students = UserDate::whereHas('entities', function ($query) use ($search) {
+                                $query->where('name_entity', 'LIKE', "%$search%");
+                            })
+                            ->whereHas('user', function ($query) {
+                                $query->whereHas('roles', function ($query) {
+                                    $query->where('name', 'student');
+                                });
+                            })
+                            ->where('regional_id', $user->userDate->regional_id)
+                            ->get();
+                break;
+            default:
+                $students = [];
+
+        }
+        return view('users.students.studentbysearch', compact('students'));
+    }
+
+    public function createuser() 
+    {
+        $user = User::find(Auth()->id());
+        $role = $user->getRoleNames()[0];
+        $roles = [];
+        switch ($role) {
+            case 'admin':
+                $roles =  Role::whereNotIn('name', ['teacher', 'student', 'school-principal', 'super-admin'])
+                            ->get();
+                break;
+            case 'admregional':
+                $roles = Role::whereNotIn('name', ['teacher', 'student', 'school-principal', 'admin', 'admregional', 'super-admin'])
+                        ->get();
+                break;
+            default:
+                return back();
+        }
+
+        return view('users.create-user-by-roles', compact('roles'));
+    }
+
+    public function create($id) 
+    {
+        $role = Role::find($id);
+        $regionals =  Regional::all();
+  
+        return view('users.create', compact('regionals', 'role'));
+    }
+
+    public function store(StoreUserRequest $request, $id)
+    {
+        $role = Role::find($id);
+        $userId = User::find(Auth()->id());
+        $roleName = $userId->getRoleNames()[0];
+
+        $user = new User();
+        $user->email = $request->email;
+        $user->password = Hash::make('password');
+        $user->enable = false;
+        $user->save();
+
+        $user->assignRole($role->name);
+
+        $userDate = new UserDate();
+
+        if ($roleName == 'admregional') {
+            $userDate->regional_id = $userId->userDate->regional_id;
+        }else {
+            $userDate->regional_id = $request->regional_id;
+        }
+
+        $userDate->name = $request->name;
+        $userDate->first_lastname = $request->first_lastname;
+        $userDate->second_lastname = $request->second_lastname;
+        $userDate->nro_ci = $request->nro_ci;
+        $userDate->issued = $request->issued;
+        $userDate->nit = $request->nit;
+        $userDate->birthday_date = $request->birthday_date;
+        $userDate->city = $request->city;
+        $userDate->addres = $request->addres;
+        $userDate->landline = $request->landline;
+        $userDate->cell_personal = $request->cell_personal;
+        $userDate->cell_work = $request->cell_work;
+        $userDate->email_personal = $request->email_personal;
+        $userDate->code_sap = $request->code_sap;
+        $userDate->code_employee_sap = $request->code_employee_sap;
+        $userDate->code_teacher = $request->code_teacher;
+        $userDate->change_password = $request->change_password;
+        $userDate->rate_hoguera = $request->rate_hoguera;
+        $userDate->rate_alpema = $request->rate_alpema;
+        $userDate->verify_data = $request->verify_data;
+        $userDate->pos_hoguera_id = $request->pos_hoguera_id;
+
+        $user->userDate()->save($userDate);
+        $messages = 'El usuario se registro correctamente';
+        return back()->with(compact('messages'));
+    }
+
+    public function edit($id)
     {
         $user = User::findOrFail($id);
-        $user_date = $user->userDate;
-
-        return view('edit', compact('user', 'user_date'));
+        return view('users.edit', compact('user'));
     }
 
-    public function update(StoreUserRequest $request, $id) 
+    public function update(Request $request, $id)
     {
-        $user = User::find($id);
-        $user->update($request->all());
+        $user = User::findOrFail($id);
+        $user->update([
+            'enable' => $request->enable,
+        ]);
 
         $user->userDate->update([
-            'name' => $request->name, 
-            'enable' => $request->enable, 
-            'first_lastname' => $request->first_lastname, 
-            'second_lastname' => $request->second_lastname,
-            'nro_ci' => $request->nro_ci,
-            'issued' => $request->issued, 
-            'nit' => $request->nit,
-            'birthday_date' => $request->birthday_date, 
-            'city' => $request->city, 
-            'addres' => $request->addres, 
-            'landline' => $request->landline, 
-            'cell_personal' => $request->cell_personal, 
-            'cell_work' => $request->cell_work,
-            'email_personal' => $request->email_personal, 
-            'code_sap' => $request->code_sap, 
-            'code_employee_sap' => $request->code_employee_sap, 
-            'code_teacher' => $request->code_teacher, 
-            'change_password' => $request->change_password, 
-            'creator_user' => $request->creator_user,
-            'rate' => $request->rate, 
-            'field1' => $request->field1, 
-            'field2' => $request->field2, 
-            'field3' => $request->field3, 
-            'field4' => $request->field4, 
-            'field5' => $request->field5, 
-            'field6' => $request->field6, 
-            'field7' => $request->field7, 
-            'field8' => $request->field8,
+            'regional_id' =>$request->regional_id,
+            'name' =>$request->name,
+            'first_lastname' =>$request->first_lastname,
+            'second_lastname' =>$request->second_lastname,
+            'nro_ci' =>$request->nro_ci,
+            'issued' =>$request->issued,
+            'nit' =>$request->nit,
+            'birthday_date' =>$request->birthday_date,
+            'city' =>$request->city,
+            'addres' =>$request->addres,
+            'landline' =>$request->landline,
+            'cell_personal' =>$request->cell_personal,
+            'cell_work' =>$request->cell_work,
+            'email_personal' =>$request->email_personal,
+            'code_sap' =>$request->code_sap,
+            'code_employee_sap' =>$request->code_employee_sap,
+            'code_teacher' =>$request->code_teacher,
+            'change_password' =>$request->change_password,
+            'rate_hoguera' =>$request->rate_hoguera,
+            'rate_alpema' =>$request->rate_alpema,
+            'verify_data' =>$request->verify_data,
+            'pos_hoguera_id' =>$request->pos_hoguera_id,
         ]);
- 
+
         $notification = 'Se actualizaron los datos correctamente.';
-        return redirect('/home')->with(compact('notification'));
+        return back()->with(compact('notification'));
     }
 
-    public function destroy($id) 
+    public function destroy($id)
     {
-        $user = User::findOrFail($id)->userDate;
+        $user = User::find($id)->userDate;
         $user->delete();
         $notification = 'Se elimino correctamente';
         return back()->with(compact('notification'));
     }
 
-    public function restore($id) 
+    public function restore($id)
     {
         User::withTrashed()->find($id)->restore();
         return redirect()->back();
     }
 
-    public function restoreAll() 
+    public function restoreAll()
     {
         User::onlyTrashed()->restore();
         return redirect()->back();
     }
+
 }
