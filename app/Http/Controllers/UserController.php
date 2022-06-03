@@ -327,7 +327,7 @@ class UserController extends Controller
         return view('users.create', compact('regionals', 'role'));
     }
 
-    public function store(StoreUserRequest $request, $id)
+    public function store(Request $request, $id)
     {
         $role = Role::find($id);
         $userId = User::find(Auth()->id());
@@ -382,7 +382,7 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreUserRequest $request, $id)
     {
         $user = User::findOrFail($id);
         $user->update([

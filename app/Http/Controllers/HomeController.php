@@ -39,19 +39,8 @@ class HomeController extends Controller
     {
         $cities = Regional::select('id', 'name')->get();
         $issueds = [
-                    'BE',
-                    'SC',
-                    'CB',
-                    'CH',
-                    'TJ',
-                    'LP',
-                    'OR',
-                    'PT',
+                    'BE','SC', 'CB','CH','TJ','LP','OR','PT',
                 ];
-        
-        foreach($issueds as $issued) {
-            echo $issued. '<br>';
-        }
 
         return view('create', compact('cities', 'issueds'));
     }
