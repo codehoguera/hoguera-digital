@@ -58,7 +58,9 @@ class FortifyServiceProvider extends ServiceProvider
                     'password' => ['La contraseña es incorrecta!!']
                 ]);
             }elseif(!$user->enable == true){
-                return $user;
+                throw ValidationException::withMessages([
+                    'password' => ['El usuario esta inhabilitado!!']
+                ]);
             }
 
             return $user;

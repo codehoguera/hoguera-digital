@@ -2,9 +2,9 @@
 @section('title', 'Wellcome')
 @section('content')
 
-    @if (!auth()->user() || auth()->user()->enable == true)
+    @if (auth()->user()->userDate->change_password  == true)
         <h1>{{ __('Wellcome') }}</h1>
-    @elseif(auth()->user()->enable == false)
+    @elseif(auth()->user()->userDate->change_password == false)
         <div class="content p-4">
             <div class="row">
                 <div class="col-md-6">

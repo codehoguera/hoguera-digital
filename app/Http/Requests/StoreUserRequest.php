@@ -28,8 +28,7 @@ class StoreUserRequest extends FormRequest
         $roleName = $userId->getRoleNames()[0];
 
         $rules = [
-            'email' => 'required|email|max:120|unique:users',
-            'enable' => 'boolean',
+            
             'name' => 'required|string|max:120',
             'first_lastname'  => 'required|string|max:100',
             'second_lastname'  => 'required|string|max:100',
@@ -66,6 +65,12 @@ class StoreUserRequest extends FormRequest
 
         if($this->get('password'))
             $rules = array_merge($rules, ['password' => 'required|confirmed|max:120']);
+
+        if($this->get('enable'))
+            $rules = array_merge($rules, ['regional_id' => 'required|boolean']);
+
+        if($this->get('email'))
+            $rules = array_merge($rules, ['email' => 'required|email|max:120|unique:users']);
 
         return $rules;
     }

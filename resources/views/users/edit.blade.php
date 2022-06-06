@@ -67,7 +67,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="issued" class="form-label">Expedido</label>
-                        <select class="form-select" aria-label="Default select example" value="issued">
+                        <select class="form-select" aria-label="Default select example">
                             <option value="BN" {{ $user->userDate->issued == 'BN' ? 'selected' : '' }}>BN</option>
                             <option value="SC" {{ $user->userDate->issued == 'SC' ? 'selected' : '' }}>SC</option>
                             <option value="CB" {{ $user->userDate->issued == 'CB' ? 'selected' : '' }}>CB</option>

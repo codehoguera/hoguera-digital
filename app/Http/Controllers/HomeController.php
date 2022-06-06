@@ -6,17 +6,22 @@ use App\Models\Regional;
 use App\Models\User;
 use App\Models\UserDate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
     public function index()
     {
+        $user = User::find(Auth()->id());
+        
         return view('home');
     }
 
-    public function password(Request $request) 
+    public function passwordConfirmed(Request $request) 
     {
+
         $request->validate([
             'password' => 'required|string|max:120|confirmed',
             'password_confirmation' => 'required'
@@ -27,11 +32,11 @@ class HomeController extends Controller
         if($user !== null)
         {
             $user->password = Hash::make($request->password);
+            $user->userDate->change_password = true;
             $user->save();
         }
-        
-        $messages = 'Su contraseña fue cambiado correctamente';
-        return back()->with(compact('messages'));
+
+        return $user;
 
     }
 

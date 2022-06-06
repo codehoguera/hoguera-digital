@@ -10,7 +10,7 @@
 </head>
 <body>
   
-@if (!auth()->user() || auth()->user()->enable == true)
+@if (!auth()->user() || auth()->user()->userDate->change_password == true)
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="{{ url('/') }}">Home</a>

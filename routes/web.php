@@ -18,9 +18,9 @@ Route::get('language/{locale}', function ($locale) {
 });
 
 //
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::patch('/', [HomeController::class, 'password'])->name('home');
-Route::get('/home', [HomeController::class, 'create'])->name('create');
+Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth');
+Route::patch('/', [HomeController::class, 'passwordConfirmed'])->name('home')->middleware('status');
+Route::get('/home', [HomeController::class, 'create'])->name('create')->middleware('status');
 Route::post('/home', [HomeController::class, 'store'])->name('create.store');
 
 

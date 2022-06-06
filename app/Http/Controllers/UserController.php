@@ -336,7 +336,7 @@ class UserController extends Controller
         $user = new User();
         $user->email = $request->email;
         $user->password = Hash::make('password');
-        $user->enable = false;
+        $user->enable = true;
         $user->save();
 
         $user->assignRole($role->name);
@@ -385,37 +385,37 @@ class UserController extends Controller
     public function update(StoreUserRequest $request, $id)
     {
         $user = User::findOrFail($id);
-        $user->update([
-            'enable' => $request->enable,
-        ]);
+        $user->email = $user->email;
+        $user->save();
 
-        $user->userDate->update([
-            'regional_id' =>$request->regional_id,
-            'name' =>$request->name,
-            'first_lastname' =>$request->first_lastname,
-            'second_lastname' =>$request->second_lastname,
-            'nro_ci' =>$request->nro_ci,
-            'issued' =>$request->issued,
-            'nit' =>$request->nit,
-            'birthday_date' =>$request->birthday_date,
-            'city' =>$request->city,
-            'addres' =>$request->addres,
-            'landline' =>$request->landline,
-            'cell_personal' =>$request->cell_personal,
-            'cell_work' =>$request->cell_work,
-            'email_personal' =>$request->email_personal,
-            'code_sap' =>$request->code_sap,
-            'code_employee_sap' =>$request->code_employee_sap,
-            'code_teacher' =>$request->code_teacher,
-            'change_password' =>$request->change_password,
-            'rate_hoguera' =>$request->rate_hoguera,
-            'rate_alpema' =>$request->rate_alpema,
-            'verify_data' =>$request->verify_data,
-            'pos_hoguera_id' =>$request->pos_hoguera_id,
-        ]);
+        $userDate = $user->userDate;
+        $userDate->regional_id = $user->userDate->regional_id;
+        $userDate->name = $request->name;
+        $userDate->first_lastname = $request->first_lastname;
+        $userDate->second_lastname = $request->second_lastname;
+        $userDate->nro_ci = $request->nro_ci;
+        $userDate->issued = $request->issued;
+        $userDate->nit = $request->nit;
+        $userDate->birthday_date = $request->birthday_date;
+        $userDate->city = $request->city;
+        $userDate->addres = $request->addres;
+        $userDate->landline = $request->landline;
+        $userDate->cell_personal = $request->cell_personal;
+        $userDate->cell_work = $request->cell_work;
+        $userDate->email_personal = $request->email_personal;
+        $userDate->code_sap = $request->code_sap;
+        $userDate->code_employee_sap = $request->code_employee_sap;
+        $userDate->code_teacher = $request->code_teacher;
+        $userDate->change_password = $request->change_password;
+        $userDate->rate_hoguera = $request->rate_hoguera;
+        $userDate->rate_alpema = $request->rate_alpema;
+        $userDate->verify_data = $request->verify_data;
+        $userDate->pos_hoguera_id = $request->pos_hoguera_id;
+        $userDate->save();
+      
 
-        $notification = 'Se actualizaron los datos correctamente.';
-        return back()->with(compact('notification'));
+        $messages = 'Se actualizaron los datos correctamente.';
+        return back()->with(compact('messages'));
     }
 
     public function destroy($id)

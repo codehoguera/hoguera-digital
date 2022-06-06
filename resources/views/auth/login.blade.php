@@ -10,6 +10,11 @@
             @endforeach
         </ul>
     @endif
+    @if (session('messages'))
+        <div class="alert alert-success">
+            <p><strong>{{ session('messages') }}</strong></p>
+        </div>
+    @endif
     <form action="{{ route('login') }}" method="POST">
         @csrf
         <input type="email" name="email" id="email" placeholder="name@example.com" value="{{ old('email') }}">
