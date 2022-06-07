@@ -46,7 +46,7 @@ class HomeController extends Controller
     {
         $cities = Regional::select('id', 'name')->get();
         $issueds = [
-                    'BE','SC', 'CB','CH','TJ','LP','OR','PT',
+                    'BE','SCZ', 'CB','CH','TJ','LP','OR','PT',
                 ];
 
         return view('verify-data', compact('cities', 'issueds'));

@@ -31,10 +31,11 @@
                 <table class="table table-striped" style="width:100%" id="users">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Rol</th>
-                            <th>Action</th>
+                            <th>Nombre</th>
+                            <th>E-mail</th>
+                            <th>Regional</th>
+                            <th>Roles</th>
+                            <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,12 +43,15 @@
                             <tr>
                                 <td>{{ $user->userDate->name.' '.$user->userDate->first_lastname.' '.$user->userDate->second_lastname }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>{{ $user->userDate->regional->name }}</td>
                                 <td>{{ $user->roles[0]->name }}</td>
                                 <td>
                                     <a class="btn btn-info" href="{{ url('/user/'.$user->id.'/edit') }}">Edit</a>
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-delete-{{ $user->id }}">
-                                        Delete
-                                    </button>
+                                    <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input class="btn btn-danger" type="submit" value="Delete">
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

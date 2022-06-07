@@ -17,24 +17,36 @@ Route::get('language/{locale}', function ($locale) {
     return redirect()->back();
 });
 
-Route::get('/home', function () {
-    return view('home');
-})->middleware(['status']);
+Route::group(['middleware' => 'auth'], function () {
+    
+    Route::group(['middleware' => 'status'], function () {
 
+        Route::get('/home', function () {
+            return view('home');
+        });
 
-Route::get('/', function () {
-    return redirect('home');
-})->middleware(['auth','status']);
+        Route::get('/', function () {
+            return redirect('home');
+        });
 
-Route::get('/change_password', [HomeController::class, 'index'])->middleware('auth')->name('change-password');
-Route::patch('/save_password', [HomeController::class, 'passwordConfirmed'])->middleware('auth');
-Route::get('/verify_data', [HomeController::class, 'create'])->middleware('auth')->name('verify-data');
-Route::post('/save_data', [HomeController::class, 'store'])->middleware('auth');
+        Route::group(['middleware' => ['role:admin|admregional']], function () {
+            Route::get('/users', [UserController::class, 'index'])->name('users.index');
+            Route::get('/createuser', [UserController::class, 'createuser'])->name('users.create-user-by-roles');
+            Route::get('/createuser/createtypeuser/{id}', [UserController::class, 'create'])->name('users.create');
+            Route::post('/createuser/createtypeuser/{id}', [UserController::class, 'store'])->name('users.store');
+            Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+            Route::patch('/user/{id}', [UserController::class, 'update'])->name('users.update');
+            Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+        });
 
-//require_once __DIR__ . '/fortify.php';
+    });
 
-//users
-Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/change_password', [HomeController::class, 'index'])->name('change-password');
+    Route::patch('/save_password', [HomeController::class, 'passwordConfirmed']);
+    Route::get('/verify_data', [HomeController::class, 'create'])->name('verify-data');
+    Route::post('/save_data', [HomeController::class, 'store'])->name('auth');
+});
+
 
 //director
 Route::get('/director', [UserController::class, 'directorSearch'])->name('users.directores.director');
@@ -50,16 +62,6 @@ Route::post('/teacherbyschool', [UserController::class, 'teacherbysearch'])->nam
 Route::get('/student', [UserController::class, 'studentSearch'])->name('users.students.student');
 Route::post('/student', [UserController::class, 'student'])->name('users.students.studenstudent');
 Route::post('/studentbyschool', [UserController::class, 'studentbysearch'])->name('users.students.studentbysearch');
-
-//create user
-Route::get('/createuser', [UserController::class, 'createuser'])->name('users.create-user-by-roles');
-Route::get('/createuser/createtypeuser/{id}', [UserController::class, 'create'])->name('users.create');
-Route::post('/createuser/createtypeuser/{id}', [UserController::class, 'store'])->name('users.store');
-
-
-Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
-Route::patch('/user/{id}', [UserController::class, 'update'])->name('users.update');
-Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
 //soft delete
 Route::get('/user/restore/{id}', [UserController::class, 'restore'])->name('restore');
@@ -79,6 +81,3 @@ Route::get('/userdates', [UserDateController::class, 'index'])->name('userdates.
 //entities
 Route::get('/hoguera', [EntityController::class, 'index'])->name('entities.index');
 Route::get('/alpema', [EntityController::class, 'alpema'])->name('entities.alpema');
-
-Route::view('user/password', 'users.password');
-    

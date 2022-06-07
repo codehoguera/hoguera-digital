@@ -67,7 +67,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="issued" class="form-label">Expedido</label>
-                        <select class="form-select" aria-label="Default select example">
+                        <select class="form-select" aria-label="Default select example" name="issued">
                             <option value="BN" {{ $user->userDate->issued == 'BN' ? 'selected' : '' }}>BN</option>
                             <option value="SC" {{ $user->userDate->issued == 'SC' ? 'selected' : '' }}>SC</option>
                             <option value="CB" {{ $user->userDate->issued == 'CB' ? 'selected' : '' }}>CB</option>
@@ -84,7 +84,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="city" class="form-label">Ciudad Natal</label>
-                        <select class="form-select" aria-label="Seleccional la Región">
+                        <select class="form-select" aria-label="Seleccional la Región" name="city">
                             <option value="BENI" {{ $user->userDate->city == 'BENI' ? 'selected' : '' }}>BENI</option>
                             <option value="SANTA CRUZ" {{ $user->userDate->city == 'SANTA CRUZ' ? 'selected' : '' }}>SANTA CRUZ</option>
                             <option value="COCHABAMBA" {{ $user->userDate->city == 'COCHABAMBA' ? 'selected' : '' }}>COCHABAMBA</option>

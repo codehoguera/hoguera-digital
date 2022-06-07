@@ -25,12 +25,12 @@
             </div>
             <form action="{{ route('users.directores.director') }}" class="d-flex mb-2 form-search-index"  method="POST">
                 @csrf
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
+                <input class="form-control me-2" type="search" placeholder="Buscar por nombre" aria-label="Search" name="query">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             <form action="{{ route('users.directores.directorbysearch') }}" class="d-flex mb-2 form-search-index"  method="POST">
                 @csrf
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
+                <input class="form-control me-2" type="search" placeholder="Buscar por colegios" aria-label="Search" name="query">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             <div class="card card-body">

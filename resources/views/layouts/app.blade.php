@@ -16,28 +16,30 @@
       <a class="navbar-brand" href="{{ url('/') }}">Home</a>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         @auth
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                System
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="{{ route('users.index') }}">Users</a></li>
-                  <li><a class="dropdown-item" href="{{ route('users.directores.director') }}">Director</a></li>
-                  <li><a class="dropdown-item" href="{{ route('users.teachers.teacher') }}">Teacher</a></li>
-                  <li><a class="dropdown-item" href="{{ route('users.students.student') }}">Student</a></li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Entity
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="{{ route('entities.index') }}">Hoguera</a></li>
-                  <li><a class="dropdown-item" href="{{ route('entities.alpema') }}">Alpema</a></li>
-              </ul>
-            </li>
-          </ul>
+          @hasanyrole('admin|admregional')
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  System
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{{ route('users.index') }}">Users</a></li>
+                    <li><a class="dropdown-item" href="{{ route('users.directores.director') }}">Director</a></li>
+                    <li><a class="dropdown-item" href="{{ route('users.teachers.teacher') }}">Teacher</a></li>
+                    <li><a class="dropdown-item" href="{{ route('users.students.student') }}">Student</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Entity
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{{ route('entities.index') }}">Hoguera</a></li>
+                    <li><a class="dropdown-item" href="{{ route('entities.alpema') }}">Alpema</a></li>
+                </ul>
+              </li>
+            </ul>
+          @endhasanyrole
           <form action="{{ route('logout') }}" method="POST">
             @csrf
             <ul class="navbar-nav float-right">
