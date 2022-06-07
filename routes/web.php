@@ -17,14 +17,21 @@ Route::get('language/{locale}', function ($locale) {
     return redirect()->back();
 });
 
-//
-Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth');
-Route::patch('/', [HomeController::class, 'passwordConfirmed'])->name('home')->middleware('status');
-Route::get('/home', [HomeController::class, 'create'])->name('create')->middleware('status');
-Route::post('/home', [HomeController::class, 'store'])->name('create.store');
+Route::get('/home', function () {
+    return view('home');
+})->middleware(['status']);
 
 
-require_once __DIR__ . '/fortify.php';
+Route::get('/', function () {
+    return redirect('home');
+})->middleware(['auth','status']);
+
+Route::get('/change_password', [HomeController::class, 'index'])->middleware('auth')->name('change-password');
+Route::patch('/save_password', [HomeController::class, 'passwordConfirmed'])->middleware('auth');
+Route::get('/verify_data', [HomeController::class, 'create'])->middleware('auth')->name('verify-data');
+Route::post('/save_data', [HomeController::class, 'store'])->middleware('auth');
+
+//require_once __DIR__ . '/fortify.php';
 
 //users
 Route::get('/users', [UserController::class, 'index'])->name('users.index');

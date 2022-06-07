@@ -1,17 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Home')
-@section('css')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
-<style>
-
-.form-search-index {
-    width: 300px;
-}
-
-</style>
-@endsection
+@section('title', 'Wellcome')
 @section('content')
     <div class="content p-4">
         <div class="row">
@@ -31,7 +19,7 @@
                         <p><strong>{{ session('messages') }}</strong></p>
                     </div>
                 @endif
-                <form class="form" action="" method="POST">
+                <form class="form" action="{{ url('save_data') }}" method="POST">
                     @csrf
                     <div class="mb-3">
                         <label for="nro_ci" class="form-label">Nro. C.I.</label>
@@ -88,4 +76,5 @@
         </div>
     </div>
 @endsection
+
 

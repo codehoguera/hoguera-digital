@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Regional;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,18 +19,14 @@ class Status
      */
     public function handle(Request $request, Closure $next)
     {
-
-        if(auth()->user()->userDate->change_password == false){
-            Session::flush();
-            Auth::logout();
-            $messages = 'Su contraseña fue cambiado correctamente';
-            return redirect('/login')->with(compact('messages'));
+        if(auth()->user()->userDate->change_password == false) {
+            return redirect('change_password');
         }
 
-        if(auth()->user()->userDate->change_password == true){
-            return redirect('/home');
+        if(auth()->user()->userDate->verify_data == false) {
+            return redirect('verify_data');
         }
-       
+
         return $next($request);
     }
 }

@@ -10,7 +10,7 @@
 </head>
 <body>
   
-@if (!auth()->user() || auth()->user()->userDate->change_password == true)
+@if (!auth()->user() || auth()->user()->userDate->change_password == true && auth()->user()->userDate->verify_data == true)
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="{{ url('/') }}">Home</a>
@@ -64,10 +64,7 @@
       </div>
     </div>
   </nav> 
-@else
-
 @endif 
-
 
 @yield('content')
 

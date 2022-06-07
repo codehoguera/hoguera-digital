@@ -14,9 +14,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $user = User::find(Auth()->id());
-        
-        return view('home');
+        return view('change-password');
     }
 
     public function passwordConfirmed(Request $request) 
@@ -32,12 +30,16 @@ class HomeController extends Controller
         if($user !== null)
         {
             $user->password = Hash::make($request->password);
-            $user->userDate->change_password = true;
             $user->save();
         }
 
-        return $user;
+        $userData = $user->userDate;
+        $userData->change_password = true;
+        $userData->save();
 
+        Session::flush();
+        Auth::logout();
+        return redirect()->route('login');
     }
 
     public function create() 
@@ -47,7 +49,7 @@ class HomeController extends Controller
                     'BE','SC', 'CB','CH','TJ','LP','OR','PT',
                 ];
 
-        return view('create', compact('cities', 'issueds'));
+        return view('verify-data', compact('cities', 'issueds'));
     }
 
     public function store(Request $request) 
@@ -65,9 +67,6 @@ class HomeController extends Controller
         ]);
 
         $user = User::find(Auth()->id());
-        
-        $user->enable = true;
-        $user->save();
 
         $userDate = $user->userDate;
         $userDate->nro_ci = $request->nro_ci;
@@ -79,11 +78,12 @@ class HomeController extends Controller
         $userDate->landline = $request->landline;
         $userDate->cell_work = $request->cell_work;
         $userDate->email_personal = $request->email_personal;
+        $userDate->verify_data = true;
 
         $userDate->save();
 
         $messages = 'Los datos fueron guardados correctamente';
-        return back()->with(compact('messages'));
+        return redirect('/home')->with(compact('messages'));
         
     }
 }
