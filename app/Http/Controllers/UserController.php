@@ -18,6 +18,11 @@ use function PHPUnit\Framework\returnSelf;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('status', ['except' => ['changePassword', 'saveChangePassword', 'verifyData', 'saveVerifyData']]);
+    }
 
     public function index()
     {
@@ -416,7 +421,7 @@ class UserController extends Controller
         return view('users.verify-data', compact('cities', 'issueds'));
     }
 
-    public function saveferifyData(Request $request) 
+    public function saveVerifyData(Request $request) 
     {
         $request->validate([
             'nro_ci' => 'required',

@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class EntityController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('status');
+    }
+
     public function index()
     {
         $user = User::find(Auth()->id());

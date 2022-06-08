@@ -13,7 +13,7 @@
 @if (!auth()->user() || auth()->user()->userDate->change_password == true && auth()->user()->userDate->verify_data == true)
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url('/') }}">Home</a>
+      <a class="navbar-brand" href="{{ url('/home') }}">Home</a>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         @auth
           @hasanyrole('admin|admregional')

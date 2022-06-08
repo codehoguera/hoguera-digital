@@ -10,19 +10,17 @@ use App\Http\Controllers\EntityController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
 Route::get('language/{locale}', function ($locale) {
     app()->setLocale($locale);
     session()->put('locale', $locale);
 
     return redirect()->back();
-});
-
-Route::get('/home', function () {
-    return view('home');
-});
-
-Route::get('/', function () {
-    return redirect('home');
 });
 
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
