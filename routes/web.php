@@ -17,35 +17,27 @@ Route::get('language/{locale}', function ($locale) {
     return redirect()->back();
 });
 
-Route::group(['middleware' => 'auth'], function () {
-    
-    Route::group(['middleware' => 'status'], function () {
-
-        Route::get('/home', function () {
-            return view('home');
-        });
-
-        Route::get('/', function () {
-            return redirect('home');
-        });
-
-        Route::group(['middleware' => ['role:admin|admregional']], function () {
-            Route::get('/users', [UserController::class, 'index'])->name('users.index');
-            Route::get('/createuser', [UserController::class, 'createuser'])->name('users.create-user-by-roles');
-            Route::get('/createuser/createtypeuser/{id}', [UserController::class, 'create'])->name('users.create');
-            Route::post('/createuser/createtypeuser/{id}', [UserController::class, 'store'])->name('users.store');
-            Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
-            Route::patch('/user/{id}', [UserController::class, 'update'])->name('users.update');
-            Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-        });
-
-    });
-
-    Route::get('/change_password', [HomeController::class, 'index'])->name('change-password');
-    Route::patch('/save_password', [HomeController::class, 'passwordConfirmed']);
-    Route::get('/verify_data', [HomeController::class, 'create'])->name('verify-data');
-    Route::post('/save_data', [HomeController::class, 'store'])->name('auth');
+Route::get('/home', function () {
+    return view('home');
 });
+
+Route::get('/', function () {
+    return redirect('home');
+});
+
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::get('/createuser', [UserController::class, 'createuser'])->name('users.create-user-by-roles');
+Route::get('/createuser/createtypeuser/{id}', [UserController::class, 'create'])->name('users.create');
+Route::post('/createuser/createtypeuser/{id}', [UserController::class, 'store'])->name('users.store');
+Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+Route::patch('/user/{id}', [UserController::class, 'update'])->name('users.update');
+Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+Route::get('/change_password', [UserController::class, 'changePassword'])->name('change-password');
+Route::patch('/save_password', [UserController::class, 'saveChangePassword']);
+Route::get('/verify_data', [UserController::class, 'verifyData'])->name('users.verify-data');
+Route::post('/save_data', [UserController::class, 'saveVerifyData']);
+
 
 
 //director

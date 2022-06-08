@@ -10,6 +10,7 @@ use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use PhpParser\Node\Stmt\TryCatch;
 use Spatie\Permission\Models\Role;
 
@@ -374,6 +375,80 @@ class UserController extends Controller
         $user->userDate()->save($userDate);
         $messages = 'El usuario se registro correctamente';
         return back()->with(compact('messages'));
+    }
+
+    public function changePassword()
+    {
+        return view('users.change-password');
+    }
+
+    public function saveChangePassword(Request $request) 
+    {
+        $request->validate([
+            'password' => 'required|string|max:120|confirmed',
+            'password_confirmation' => 'required'
+        ]);
+
+        $user = User::find(Auth()->id());
+
+        if($user !== null)
+        {
+            $user->password = Hash::make($request->password);
+            $user->save();
+        }
+
+        $userData = $user->userDate;
+        $userData->change_password = true;
+        $userData->save();
+
+        Session::flush();
+        Auth::logout();
+        return redirect()->route('login');
+    }
+
+    public function verifyData() 
+    {
+        $cities = Regional::select('id', 'name')->get();
+        $issueds = [
+                    'BE','SCZ', 'CB','CH','TJ','LP','OR','PT',
+                ];
+
+        return view('users.verify-data', compact('cities', 'issueds'));
+    }
+
+    public function saveferifyData(Request $request) 
+    {
+        $request->validate([
+            'nro_ci' => 'required',
+            'issued' => 'required',
+            'nit' => 'required',
+            'birthday_date' => 'required',
+            'city' => 'required',
+            'addres' => 'required',
+            'landline' => 'required',
+            'cell_work' => 'nullable',
+            'email_personal' => 'required',
+        ]);
+
+        $user = User::find(Auth()->id());
+
+        $userDate = $user->userDate;
+        $userDate->nro_ci = $request->nro_ci;
+        $userDate->issued = $request->issued;
+        $userDate->nit = $request->nit;
+        $userDate->birthday_date = $request->birthday_date;
+        $userDate->city = $request->city;
+        $userDate->addres = $request->addres;
+        $userDate->landline = $request->landline;
+        $userDate->cell_work = $request->cell_work;
+        $userDate->email_personal = $request->email_personal;
+        $userDate->verify_data = true;
+
+        $userDate->save();
+
+        $messages = 'Los datos fueron guardados correctamente';
+        return redirect('/home')->with(compact('messages'));
+        
     }
 
     public function edit($id)
