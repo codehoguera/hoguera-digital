@@ -14,12 +14,8 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('status');
-    }
-
-    public function index() {
-        return view('home');
+        $this->middleware('change_password');
+        $this->middleware('verify_data');
     }
 
 }

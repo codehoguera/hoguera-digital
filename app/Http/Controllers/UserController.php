@@ -20,8 +20,8 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('status', ['except' => ['changePassword', 'saveChangePassword', 'verifyData', 'saveVerifyData']]);
+        $this->middleware('change_password', ['except' => 'changePassword', 'saveChangePassword']);
+        $this->middleware('verify_data', ['except' => 'verifyData', 'saveVerifyData']);
     }
 
     public function index()
@@ -371,10 +371,10 @@ class UserController extends Controller
         $userDate->code_sap = $request->code_sap;
         $userDate->code_employee_sap = $request->code_employee_sap;
         $userDate->code_teacher = $request->code_teacher;
-        $userDate->change_password = $request->change_password;
+        $userDate->change_password = false;
         $userDate->rate_hoguera = $request->rate_hoguera;
         $userDate->rate_alpema = $request->rate_alpema;
-        $userDate->verify_data = $request->verify_data;
+        $userDate->verify_data = false;
         $userDate->pos_hoguera_id = $request->pos_hoguera_id;
 
         $user->userDate()->save($userDate);
@@ -408,15 +408,20 @@ class UserController extends Controller
 
         Session::flush();
         Auth::logout();
-        return redirect()->route('login');
+        $messages = 'cambio su contraseña correctamente';
+        return redirect()->route('login')->with(compact('messages'));
     }
 
     public function verifyData() 
     {
-        $cities = Regional::select('id', 'name')->get();
-        $issueds = [
-                    'BE','SCZ', 'CB','CH','TJ','LP','OR','PT',
-                ];
+        if(Auth::check()) { 
+            $cities = Regional::select('id', 'name')->get();
+            $issueds = [
+                        'BE','SCZ', 'CB','CH','TJ','LP','OR','PT',
+                    ];
+        }else {
+            'error 404';
+        }
 
         return view('users.verify-data', compact('cities', 'issueds'));
     }

@@ -72,5 +72,7 @@ class Kernel extends HttpKernel
 
         //status redirect
         'status' => \App\Http\Middleware\Status::class,
+        'change_password' => \App\Http\Middleware\ChangePassword::class,
+        'verify_data' => \App\Http\Middleware\VerifyData::class,
     ];
 }

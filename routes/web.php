@@ -11,10 +11,11 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return 'welcome';
 });
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
 
 Route::get('language/{locale}', function ($locale) {
     app()->setLocale($locale);
@@ -31,12 +32,10 @@ Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('users.edit
 Route::patch('/user/{id}', [UserController::class, 'update'])->name('users.update');
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
-Route::get('/change_password', [UserController::class, 'changePassword'])->name('change-password');
+Route::get('/change_password', [UserController::class, 'changePassword'])->name('users.change-password');
 Route::patch('/save_password', [UserController::class, 'saveChangePassword']);
 Route::get('/verify_data', [UserController::class, 'verifyData'])->name('users.verify-data');
 Route::post('/save_data', [UserController::class, 'saveVerifyData']);
-
-
 
 //director
 Route::get('/director', [UserController::class, 'directorSearch'])->name('users.directores.director');
