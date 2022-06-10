@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ChangePassword
 {
@@ -17,9 +18,10 @@ class ChangePassword
     public function handle(Request $request, Closure $next)
     {
         if (auth()->user()->userDate->change_password == false){
-            return redirect('change_password'); 
+            return redirect('change_password');  
         }
 
         return $next($request);
+        
     }
 }

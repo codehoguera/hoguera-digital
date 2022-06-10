@@ -18,10 +18,11 @@ use function PHPUnit\Framework\returnSelf;
 
 class UserController extends Controller
 {
+
     public function __construct()
     {
-        $this->middleware('change_password', ['except' => 'changePassword', 'saveChangePassword']);
-        $this->middleware('verify_data', ['except' => 'verifyData', 'saveVerifyData']);
+        $this->middleware('auth');
+        $this->middleware(['change_password', 'verify_data'])->except(['changePassword', 'saveChangePassword', 'verifyData', 'saveVerifyData']);
     }
 
     public function index()
@@ -384,6 +385,10 @@ class UserController extends Controller
 
     public function changePassword()
     {
+        $user = User::find(Auth()->id());
+        if($user->userDate->change_password == true) {
+            return redirect('/home');
+        }
         return view('users.change-password');
     }
 
@@ -400,11 +405,11 @@ class UserController extends Controller
         {
             $user->password = Hash::make($request->password);
             $user->save();
-        }
 
-        $userData = $user->userDate;
-        $userData->change_password = true;
-        $userData->save();
+            $userData = $user->userDate;
+            $userData->change_password = true;
+            $userData->save();
+        }
 
         Session::flush();
         Auth::logout();
@@ -414,15 +419,14 @@ class UserController extends Controller
 
     public function verifyData() 
     {
-        if(Auth::check()) { 
-            $cities = Regional::select('id', 'name')->get();
-            $issueds = [
-                        'BE','SCZ', 'CB','CH','TJ','LP','OR','PT',
-                    ];
-        }else {
-            'error 404';
-        }
-
+        $user = User::find(Auth()->id());
+        $cities = Regional::select('id', 'name')->get();
+        $issueds = [
+                    'BE','SCZ', 'CB','CH','TJ','LP','OR','PT',
+                ];
+        if($user->userDate->verify_data == true) {
+            return redirect('/home');
+        } 
         return view('users.verify-data', compact('cities', 'issueds'));
     }
 

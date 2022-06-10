@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VerifyData
 {
@@ -16,11 +17,11 @@ class VerifyData
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->userDate->verify_data == false)
-        {
+        if (Auth::check() && auth()->user()->userDate->verify_data == false) {
             return redirect('verify_data');
         }
-
         return $next($request);
+        
+        
     }
 }
