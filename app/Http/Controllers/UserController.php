@@ -22,7 +22,7 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['change_password', 'verify_data'])->except(['changePassword', 'saveChangePassword', 'verifyData', 'saveVerifyData']);
+        $this->middleware('status')->except(['changePassword', 'saveChangePassword', 'verifyData', 'saveVerifyData']);
     }
 
     public function index()
@@ -334,7 +334,7 @@ class UserController extends Controller
         return view('users.create', compact('regionals', 'role'));
     }
 
-    public function store(Request $request, $id)
+    public function store(StoreUserRequest $request, $id)
     {
         $role = Role::find($id);
         $userId = User::find(Auth()->id());
@@ -386,10 +386,11 @@ class UserController extends Controller
     public function changePassword()
     {
         $user = User::find(Auth()->id());
-        if($user->userDate->change_password == true) {
+        if($user->userDate->change_password == 1) {
             return redirect('/home');
-        }
+        } 
         return view('users.change-password');
+        
     }
 
     public function saveChangePassword(Request $request) 
@@ -424,7 +425,10 @@ class UserController extends Controller
         $issueds = [
                     'BE','SCZ', 'CB','CH','TJ','LP','OR','PT',
                 ];
-        if($user->userDate->verify_data == true) {
+        if($user->userDate->change_password == 0) {
+            return redirect('/change_password');
+        } 
+        if($user->userDate->verify_data == 1) {
             return redirect('/home');
         } 
         return view('users.verify-data', compact('cities', 'issueds'));

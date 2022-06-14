@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Regional;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -18,15 +19,20 @@ class Status
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
-    {
-        // if (auth()->check() && auth()->user()->userDate->change_password == false)
-        // {
-        //     return redirect()->back(); 
-        // }
+    { 
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        if (Auth::user()->userDate->change_password == 0) {
+            return redirect('change_password');
+        }
+
+        if (Auth::user()->userDate->verify_data == 0) {
+            return redirect('verify_data');
+        }   
 
         return $next($request);
-        
-        
 
     }
 }

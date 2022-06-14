@@ -17,11 +17,6 @@ class VerifyData
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && auth()->user()->userDate->verify_data == false) {
-            return redirect('verify_data');
-        }
-        return $next($request);
-        
         
     }
 }

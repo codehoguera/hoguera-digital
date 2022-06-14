@@ -17,11 +17,6 @@ class ChangePassword
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->userDate->change_password == false){
-            return redirect('change_password');  
-        }
-
-        return $next($request);
-        
+           
     }
 }

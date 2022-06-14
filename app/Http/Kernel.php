@@ -70,9 +70,7 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
 
-        //status redirect
+        //status
         'status' => \App\Http\Middleware\Status::class,
-        'change_password' => \App\Http\Middleware\ChangePassword::class,
-        'verify_data' => \App\Http\Middleware\VerifyData::class,
     ];
 }

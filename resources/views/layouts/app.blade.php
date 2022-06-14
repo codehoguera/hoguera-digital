@@ -10,7 +10,7 @@
 </head>
 <body>
   
-@if (!auth()->user() || auth()->user()->userDate->change_password == true && auth()->user()->userDate->verify_data == true)
+@if (!auth()->user() || auth()->user()->userDate->change_password == 1 && auth()->user()->userDate->verify_data == 1)
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="{{ url('/home') }}">Home</a>
