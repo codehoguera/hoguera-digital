@@ -8,11 +8,17 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\FacebookController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return 'welcome';
+    return response('Hello World');
+                
 });
+
+// Route::any('{rl}', function(){
+//     return redirect('/');
+// })->where('rl', '.*');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
@@ -31,7 +37,7 @@ Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('users.edit
 Route::patch('/user/{id}', [UserController::class, 'update'])->name('users.update');
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
-Route::get('/change_password', [UserController::class, 'changePassword'])->name('users.change-password');
+Route::get('/change_password', [UserController::class, 'changePassword'])->name('users.change-password')->missing(fn() => Redirect::route('home', null, 301));
 Route::patch('/save_password', [UserController::class, 'saveChangePassword']);
 Route::get('/verify_data', [UserController::class, 'verifyData'])->name('users.verify-data');
 Route::post('/save_data', [UserController::class, 'saveVerifyData']);

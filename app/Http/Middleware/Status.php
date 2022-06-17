@@ -2,12 +2,14 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\UserController;
 use App\Models\Regional;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 
 class Status
 {
@@ -20,19 +22,20 @@ class Status
      */
     public function handle(Request $request, Closure $next)
     { 
-        if (!Auth::check()) {
+        
+        if (!Auth::check())
             return redirect()->route('login');
-        }
 
-        if (Auth::user()->userDate->change_password == 0) {
+        $user = Auth::user()->userDate;
+        //dd($request->route()->named('home'));
+       
+        if ($user->change_password == 0)
             return redirect('change_password');
-        }
 
-        if (Auth::user()->userDate->verify_data == 0) {
+        if ($user->verify_data == 0)
             return redirect('verify_data');
-        }   
 
-        return $next($request);
+        return $next($request);  
 
     }
 }
