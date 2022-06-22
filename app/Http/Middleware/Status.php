@@ -27,8 +27,7 @@ class Status
             return redirect()->route('login');
 
         $user = Auth::user()->userDate;
-        //dd($request->route()->named('home'));
-       
+        
         if ($user->change_password == 0)
             return redirect('change_password');
 

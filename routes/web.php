@@ -12,13 +12,9 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return response('Hello World');
+    return view('welcome');
                 
 });
-
-// Route::any('{rl}', function(){
-//     return redirect('/');
-// })->where('rl', '.*');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
@@ -43,17 +39,18 @@ Route::get('/verify_data', [UserController::class, 'verifyData'])->name('users.v
 Route::post('/save_data', [UserController::class, 'saveVerifyData']);
 
 //director
-Route::get('/director', [UserController::class, 'directorSearch'])->name('users.directores.director');
+Route::get('/director', [UserController::class, 'indexDirector'])->name('users.directores.director');
 Route::post('/director', [UserController::class, 'director'])->name('users.directores.director');
 Route::post('/directorbyschool', [UserController::class, 'directorbysearch'])->name('users.directores.directorbysearch');
+//Route::get('/directorbyschool', [UserController::class, 'directorbysearch'])->name('users.directores.directorbysearch');
 
 //teacher
-Route::get('/teacher', [UserController::class, 'teacherSearch'])->name('users.teachers.teacher');
+Route::get('/teacher', [UserController::class, 'indexTeacher'])->name('users.teachers.teacher');
 Route::post('/teacher', [UserController::class, 'teacher'])->name('users.teachers.teacher');
 Route::post('/teacherbyschool', [UserController::class, 'teacherbysearch'])->name('users.teachers.teacherbysearch');
 
 //student
-Route::get('/student', [UserController::class, 'studentSearch'])->name('users.students.student');
+Route::get('/student', [UserController::class, 'indexStudent'])->name('users.students.student');
 Route::post('/student', [UserController::class, 'student'])->name('users.students.studenstudent');
 Route::post('/studentbyschool', [UserController::class, 'studentbysearch'])->name('users.students.studentbysearch');
 
@@ -63,6 +60,7 @@ Route::get('user/restore-all', [UserController::class, 'restoreAll'])->name('res
 
 Route::get('/regionals', [RegionalController::class, 'index'])->name('regionals.index');
 Route::get('/userdates', [UserDateController::class, 'index'])->name('userdates.index');
+
 
 // //login google
 // Route::get('/login-google', [GoogleController::class, 'googleRedirect'])->name('auth.login');
@@ -75,3 +73,5 @@ Route::get('/userdates', [UserDateController::class, 'index'])->name('userdates.
 //entities
 Route::get('/hoguera', [EntityController::class, 'index'])->name('entities.index');
 Route::get('/alpema', [EntityController::class, 'alpema'])->name('entities.alpema');
+
+Route::get('/{request}',  [UserController::class, 'request404']);

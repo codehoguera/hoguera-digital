@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
 
         //status
         'status' => \App\Http\Middleware\Status::class,
+        'change' => \App\Http\Middleware\ChangePassword::class,
     ];
 }

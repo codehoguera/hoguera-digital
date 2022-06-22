@@ -6,12 +6,10 @@ use App\Http\Requests\StoreUserRequest;
 use App\Models\Regional;
 use App\Models\User;
 use App\Models\UserDate;
-use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-use PhpParser\Node\Stmt\TryCatch;
 use Spatie\Permission\Models\Role;
 
 use function PHPUnit\Framework\returnSelf;
@@ -27,6 +25,8 @@ class UserController extends Controller
 
     public function index()
     {
+        //$this->authorize('viewAny', User::class);
+
         $user = User::find(Auth()->id());
         $role = $user->getRoleNames()[0];
         $users = [];
@@ -53,11 +53,14 @@ class UserController extends Controller
             default:
                 $users = [];
         }
+
         return view('users.index', compact('users'));
     }
 
-    public function directorSearch()
+    public function indexDirector()
     {
+        //$this->authorize('indexDirector', User::class);
+
         $directores = [];
 
         return view('users.directores.director', compact('directores'));
@@ -139,8 +142,10 @@ class UserController extends Controller
         return view('users.directores.directorbysearch', compact('directores'));
     }
 
-    public function teacherSearch() 
+    public function indexTeacher() 
     {
+        $this->authorize('indexTeacher', User::class);
+
         $teachers = [];
 
         return view('users.teachers.teacher', compact('teachers'));
@@ -222,8 +227,10 @@ class UserController extends Controller
         return view('users.teachers.teacherbysearch', compact('teachers'));
     }
 
-    public function studentSearch() 
+    public function indexStudent() 
     {
+        //$this->authorize('viewAny', User::class);
+
         $students = [];
 
         return view('users.students.student', compact('students'));
@@ -307,6 +314,8 @@ class UserController extends Controller
 
     public function createuser() 
     {
+        //$this->authorize('viewAny', User::class);
+        
         $user = User::find(Auth()->id());
         $role = $user->getRoleNames()[0];
         $roles = [];
@@ -469,14 +478,27 @@ class UserController extends Controller
         
     }
 
+    public function request404() 
+    {
+        $user = User::find(Auth()->id());
+        if($user->userDate->change_password == 0)
+            return redirect('change_password');
+    
+        if($user->userDate->verify_data == 0)
+            return redirect('verify_data');
+    
+        return abort(404);
+    }
+
     public function edit($id)
     {
+        $this->authorize('viewAny', User::class);
         $user = User::findOrFail($id);
         return view('users.edit', compact('user'));
     }
 
     public function update(StoreUserRequest $request, $id)
-    {
+    {   
         $user = User::findOrFail($id);
         $user->email = $user->email;
         $user->save();
@@ -513,7 +535,8 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $user = User::find($id)->userDate;
+        $user = UserDate::find($id);
+        dd($user);
         $user->delete();
         $notification = 'Se elimino correctamente';
         return back()->with(compact('notification'));

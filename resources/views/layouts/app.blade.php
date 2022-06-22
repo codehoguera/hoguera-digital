@@ -9,14 +9,14 @@
     @yield('css')
 </head>
 <body>
-  
+
 @if (!auth()->user() || auth()->user()->userDate->change_password == 1 && auth()->user()->userDate->verify_data == 1)
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="{{ url('/home') }}">Home</a>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         @auth
-          @hasanyrole('admin|admregional')
+          @hasanyrole('admin|admregional')  
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
