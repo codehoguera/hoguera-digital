@@ -107,7 +107,7 @@ class DatabaseSeeder extends Seeder
                 }
 
         \App\Models\UserDate::each(function($user){
-            $user->entities()->saveMany(\App\Models\Entity::factory()->count(2)->make());
+            $user->entities()->saveMany(\App\Models\Entity::factory()->count(1)->make());
         });
         
     }

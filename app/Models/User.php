@@ -24,9 +24,6 @@ class User extends Authenticatable
         'email',
         'password',
         'enable',
-        'avatar',
-        'external_id',
-        'external_auth'
     ];
 
     public function userDate()

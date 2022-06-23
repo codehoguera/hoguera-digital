@@ -40,11 +40,11 @@
                     </thead>
                     <tbody>
                         @foreach ($users as $user)
-                            @foreach ($user['entity'] as $item)
+                            @foreach ($user['entities'] as $item)
                                 <tr>
                                     <td>{{ $item->code_sie_entity }}</td>
                                     <td>{{ $item->name_entity }}</td>
-                                    <td>{{ $item->name_entity }}</td>
+                                    <td>{{ $user->regional->name }}</td>
                                     <td>
                                         <a class="btn btn-info" href="{{ url('/user/'.$user->id.'/edit') }}">Edit</a>
                                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-delete-{{ $user->id }}">

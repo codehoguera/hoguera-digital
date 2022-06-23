@@ -32,9 +32,12 @@ class UserController extends Controller
         $users = [];
         switch($role){
             case 'admin':
-                $users = User::with('roles')
+                $users = User::with('roles', 'userDate')
                         ->whereHas('roles', function ($query) {
                             $query->whereNotIn('name', ['teacher', 'student', 'school-principal']);
+                        })
+                        ->whereHas('userDate', function ($query) {
+                            $query->select('id');
                         })
                         ->select('id', 'email')
                         ->get();
@@ -53,7 +56,7 @@ class UserController extends Controller
             default:
                 $users = [];
         }
-
+        //return $users;
         return view('users.index', compact('users'));
     }
 
@@ -343,7 +346,7 @@ class UserController extends Controller
         return view('users.create', compact('regionals', 'role'));
     }
 
-    public function store(StoreUserRequest $request, $id)
+    public function store(User $request, $id)
     {
         $role = Role::find($id);
         $userId = User::find(Auth()->id());
@@ -492,7 +495,6 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $this->authorize('viewAny', User::class);
         $user = User::findOrFail($id);
         return view('users.edit', compact('user'));
     }
@@ -535,23 +537,17 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $user = UserDate::find($id);
-        dd($user);
+        $user = User::find($id);
         $user->delete();
         $notification = 'Se elimino correctamente';
         return back()->with(compact('notification'));
     }
 
-    public function restore($id)
-    {
-        User::withTrashed()->find($id)->restore();
-        return redirect()->back();
-    }
-
-    public function restoreAll()
-    {
-        User::onlyTrashed()->restore();
-        return redirect()->back();
-    }
+    // public function restore($id)
+    // {
+    //     $user = User::onlyTrashed()->findOrFail($id);
+    //     $user->restore();
+    //     return redirect()->back();
+    // }
 
 }

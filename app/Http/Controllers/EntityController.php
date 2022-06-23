@@ -63,8 +63,8 @@ class EntityController extends Controller
         $users = [];
         switch ($role) {
             case 'admin':
-                $users = UserDate::with('entity', 'regional')
-                            ->whereHas('entity', function ($query) use ($search) {
+                $users = UserDate::with('entities', 'regional')
+                            ->whereHas('entities', function ($query) use ($search) {
                                 $query->where('name_entity', 'like', "%$search%");
                             })
                             ->whereHas('regional', function ($query) {
@@ -74,8 +74,8 @@ class EntityController extends Controller
                             ->get();
                 break;
             case 'admregional':
-                $users = UserDate::with('entity', 'regional')
-                            ->whereHas('entity', function ($query) use ($search) {
+                $users = UserDate::with('entities', 'regional')
+                            ->whereHas('entities', function ($query) use ($search) {
                                 $query->where('name_entity', 'like', "%$search%");
                             })
                             ->whereHas('regional', function ($query) use ($user) {

@@ -42,7 +42,6 @@ Route::post('/save_data', [UserController::class, 'saveVerifyData']);
 Route::get('/director', [UserController::class, 'indexDirector'])->name('users.directores.director');
 Route::post('/director', [UserController::class, 'director'])->name('users.directores.director');
 Route::post('/directorbyschool', [UserController::class, 'directorbysearch'])->name('users.directores.directorbysearch');
-//Route::get('/directorbyschool', [UserController::class, 'directorbysearch'])->name('users.directores.directorbysearch');
 
 //teacher
 Route::get('/teacher', [UserController::class, 'indexTeacher'])->name('users.teachers.teacher');
@@ -54,23 +53,9 @@ Route::get('/student', [UserController::class, 'indexStudent'])->name('users.stu
 Route::post('/student', [UserController::class, 'student'])->name('users.students.studenstudent');
 Route::post('/studentbyschool', [UserController::class, 'studentbysearch'])->name('users.students.studentbysearch');
 
-//soft delete
-Route::get('/user/restore/{id}', [UserController::class, 'restore'])->name('restore');
-Route::get('user/restore-all', [UserController::class, 'restoreAll'])->name('restoreAll');
-
 Route::get('/regionals', [RegionalController::class, 'index'])->name('regionals.index');
 Route::get('/userdates', [UserDateController::class, 'index'])->name('userdates.index');
 
-
-// //login google
-// Route::get('/login-google', [GoogleController::class, 'googleRedirect'])->name('auth.login');
-// Route::get('/google-callback', [GoogleController::class, 'googleCallback'])->name('auth.login');
-
-// //login facebook
-// Route::get('/login-facebook', [FacebookController::class, 'facebookRedirect'])->name('auth.login');
-// Route::get('/facebook-callback', [FacebookController::class, 'facebookCallback'])->name('auth.login');
-
-//entities
 Route::get('/hoguera', [EntityController::class, 'index'])->name('entities.index');
 Route::get('/alpema', [EntityController::class, 'alpema'])->name('entities.alpema');
 

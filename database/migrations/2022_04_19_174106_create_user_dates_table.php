@@ -18,7 +18,7 @@ return new class extends Migration
             
             //fk users
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             //fk regionals
             $table->unsignedBigInteger('regional_id');
@@ -67,5 +67,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('user_dates');
+        Schema::dropSoftDeletes('user_dates');
     }
 };
