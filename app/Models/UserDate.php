@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Mockery\Matcher\Subset;
 
 class UserDate extends Model
 {
@@ -60,9 +61,22 @@ class UserDate extends Model
         return $this->belongsTo(Regional::class);
     }
 
+    //relacion muchos a muchos
     public function entities()
     {
         return $this->belongsToMany(Entity::class);
+    }
+
+    //relacion muchos a muchos
+    public function grades()
+    {
+        return $this->belongsToMany(Grade::class);
+    }
+
+    //relacion muchos a muchos
+    public function subjects() 
+    {
+        return $this->belongsToMany(Subset::class);
     }
 
 }

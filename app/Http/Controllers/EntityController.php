@@ -18,6 +18,7 @@ class EntityController extends Controller
 
     public function index()
     {
+        $this->authorize('viewAny', User::class);
         $user = User::find(Auth()->id());
         $role = $user->getRoleNames()[0];
         $search = 'S';
@@ -48,7 +49,7 @@ class EntityController extends Controller
                 break;
 
             default:
-                $users = [];
+                return back();
         }
         
         return view('entities.index', compact('users'));
@@ -57,6 +58,7 @@ class EntityController extends Controller
 
     public function alpema() 
     {
+        $this->authorize('viewAny', User::class);
         $user = User::find(Auth()->id());
         $role = $user->getRoleNames()[0];
         $search = 'S';
@@ -87,7 +89,7 @@ class EntityController extends Controller
                 break;
 
             default:
-                $users = [];
+                $users = back();
         }
         
         return view('entities.alpema', compact('users'));

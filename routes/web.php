@@ -7,6 +7,7 @@ use App\Http\Controllers\UserDateController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\FacebookController;
 use App\Http\Controllers\EntityController;
+use App\Http\Controllers\GradeController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,7 @@ Route::post('/save_data', [UserController::class, 'saveVerifyData']);
 
 //director
 Route::get('/director', [UserController::class, 'indexDirector'])->name('users.directores.director');
+//Route::get('/createuser/createtypeuser/{id}', [UserController::class, 'create'])->name('users.teacher.');
 Route::post('/director', [UserController::class, 'director'])->name('users.directores.director');
 Route::post('/directorbyschool', [UserController::class, 'directorbysearch'])->name('users.directores.directorbysearch');
 
@@ -58,5 +60,13 @@ Route::get('/userdates', [UserDateController::class, 'index'])->name('userdates.
 
 Route::get('/hoguera', [EntityController::class, 'index'])->name('entities.index');
 Route::get('/alpema', [EntityController::class, 'alpema'])->name('entities.alpema');
+
+Route::get('/school/grades', [GradeController::class, 'index'])->name('grades.index');
+Route::get('/school/grades/create', [GradeController::class, 'create'])->name('grades.create');
+Route::get('/school/grades/create', [GradeController::class, 'store'])->name('grades.store');
+Route::get('/school/grades/{id}/edit', [GradeController::class, 'edit'])->name('grades.edit');
+Route::patch('/school/grades/{id}', [GradeController::class, 'update'])->name('grades.update');
+
+
 
 Route::get('/{request}',  [UserController::class, 'request404']);

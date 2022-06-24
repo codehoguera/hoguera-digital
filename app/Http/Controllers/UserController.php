@@ -25,8 +25,7 @@ class UserController extends Controller
 
     public function index()
     {
-        //$this->authorize('viewAny', User::class);
-
+        $this->authorize('viewAny', User::class);
         $user = User::find(Auth()->id());
         $role = $user->getRoleNames()[0];
         $users = [];
@@ -54,15 +53,15 @@ class UserController extends Controller
                         ->get();
                 break;
             default:
-                $users = [];
+                return back();
         }
-        //return $users;
+
         return view('users.index', compact('users'));
     }
 
     public function indexDirector()
     {
-        //$this->authorize('indexDirector', User::class);
+        $this->authorize('indexDirector', User::class);
 
         $directores = [];
 
@@ -232,7 +231,7 @@ class UserController extends Controller
 
     public function indexStudent() 
     {
-        //$this->authorize('viewAny', User::class);
+        $this->authorize('viewAny', User::class);
 
         $students = [];
 
@@ -402,7 +401,6 @@ class UserController extends Controller
             return redirect('/home');
         } 
         return view('users.change-password');
-        
     }
 
     public function saveChangePassword(Request $request) 
@@ -537,17 +535,11 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $user = User::find($id);
-        $user->delete();
+        // $this->authorize('destroy', User::class);
+        
+        User::find($id)->delete();
+        UserDate::find($id)->delete();
         $notification = 'Se elimino correctamente';
         return back()->with(compact('notification'));
     }
-
-    // public function restore($id)
-    // {
-    //     $user = User::onlyTrashed()->findOrFail($id);
-    //     $user->restore();
-    //     return redirect()->back();
-    // }
-
 }

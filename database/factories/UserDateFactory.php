@@ -33,8 +33,8 @@ class UserDateFactory extends Factory
             'cell_work' => $this->faker->ean8,
             'email_personal' => $this->faker->email(),
             'code_teacher' => $this->faker->postcode(),
-            'change_password' => $this->faker->boolean(),
-            'verify_data' => $this->faker->boolean(),
+            'change_password' => false,
+            'verify_data' => false,
         ];
     }
 }

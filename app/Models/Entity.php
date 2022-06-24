@@ -50,6 +50,7 @@ class Entity extends Model
         return $this->belongsTo(Regional::class);
     }
 
+    //relacion muchos a muchos
     public function userDate()
     {
         return $this->belongsToMany(UserDate::class);

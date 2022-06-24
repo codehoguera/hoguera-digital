@@ -20,6 +20,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
     protected $fillable = [
         'email',
         'password',
@@ -30,6 +31,17 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserDate::class);
     }
+
+    // protected static function boot() 
+    // {
+    //   parent::boot();
+
+    //   static::deleting(function($users) {
+    //      foreach ($users->userDate()->get() as $userDate) {
+    //         $userDate->delete();
+    //      }
+    //   });
+    // }
 
     /**
      * The attributes that should be hidden for serialization.

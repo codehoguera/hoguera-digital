@@ -16,6 +16,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="card-body">
+                <a href="" type="button" class="btn btn-primary btn-lg">Crear Profesor</a>
                 @if (session('notification'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <span class="alert-icon"><i class="ni ni-like-2"></i></span>

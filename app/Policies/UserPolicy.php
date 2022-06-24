@@ -67,16 +67,10 @@ class UserPolicy
 
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function delete(User $user, User $model)
+    public function destroy(User $user)
     {
-        //
+        if($user->can('destroy all users'))
+            return true;
     }
 
     /**
