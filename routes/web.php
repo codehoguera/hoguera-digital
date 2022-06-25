@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\FacebookController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SubjectController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
@@ -63,10 +64,11 @@ Route::get('/alpema', [EntityController::class, 'alpema'])->name('entities.alpem
 
 Route::get('/school/grades', [GradeController::class, 'index'])->name('grades.index');
 Route::get('/school/grades/create', [GradeController::class, 'create'])->name('grades.create');
-Route::get('/school/grades/create', [GradeController::class, 'store'])->name('grades.store');
+Route::post('/school/grades/create', [GradeController::class, 'store'])->name('grades.store');
 Route::get('/school/grades/{id}/edit', [GradeController::class, 'edit'])->name('grades.edit');
 Route::patch('/school/grades/{id}', [GradeController::class, 'update'])->name('grades.update');
 
+Route::get('/school/subjects', [SubjectController::class, 'index'])->name('subjects.index');
 
 
 Route::get('/{request}',  [UserController::class, 'request404']);

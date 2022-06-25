@@ -37,7 +37,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($grades as $grade)
+                        @foreach ($subjects as $subject)
                             <tr>
                                 <td>{{ $grade->name_grade }}</td>
                                 <td>{{ $grade->cycle }}</td>

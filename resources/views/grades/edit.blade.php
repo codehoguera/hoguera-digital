@@ -32,17 +32,18 @@
                 @endif
                 <form class="form" action="{{ route('grades.update', $grade->id) }}" method="POST">
                     @csrf
+                    @method('PATCH')
                     <div class="mb-3">
                         <label for="name_grade" class="form-label">Nombre de Grado</label>
-                        <input type="text" class="form-control" id="name_grade" name="name_grade" placeholder="" value="">
+                        <input type="text" class="form-control" id="name_grade" name="name_grade" placeholder="" value="{{ $grade->name_grade }}">
                     </div>
                     <div class="mb-3">
                         <label for="cycle" class="form-label">Ciclo</label>
-                        <input type="cycle" class="form-control" id="cycle" name="cycle" placeholder="" value="">
+                        <input type="cycle" class="form-control" id="cycle" name="cycle" placeholder="" value="{{ $grade->cycle }}">
                     </div>
                     <div class="mb-3">
                         <label for="cover" class="form-label">Cover</label>
-                        <input type="cover" class="form-control" id="cover" name="cover" placeholder="" value="">
+                        <input type="cover" class="form-control" id="cover" name="cover" placeholder="" value="{{ $grade->cover }}">
                     </div>
                     <div class="d-grid gap-2">
                         <input hr  type="submit" class="btn btn-primary" value="Guardar Datos">
